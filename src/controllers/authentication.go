@@ -40,6 +40,6 @@ func handleAuthenticate(w http.ResponseWriter, _ *http.Request) {
 func handleSignIn(w http.ResponseWriter, _ *http.Request) {
 	result := services.SignIn()
 
-	io.WriteString(w, result)
+	w.Write([]byte(result))	
 }
 
