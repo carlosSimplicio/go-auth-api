@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/go-sql-driver/mysql"
 )
@@ -14,8 +15,8 @@ var err error
 
 func Connect() {
 	config := mysql.Config{
-		User: "root",
-		Passwd: "953042",
+		User: os.Getenv("MYSQL_USER"),
+		Passwd: os.Getenv("MYSQL_PASSWORD"),
 		DBName: "mysql",
 		Addr: "127.0.0.1:3306",
 		Net: "tcp",
