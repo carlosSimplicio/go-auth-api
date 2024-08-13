@@ -35,4 +35,16 @@ func Connect() {
 	}
 
 	fmt.Println("Connected")
+
+	data, err := db.Query("SELECT * FROM test;")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer data.Close()
+
+	for data.Next() {
+		
+	}
 }
