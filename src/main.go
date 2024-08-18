@@ -11,8 +11,8 @@ import (
 )
 
 type SignInData struct {
-	Email string `json:email`
-	Password string `json:password`
+	Email string `json:"email"`
+	Password string `json:"password"`
 }
 
 
@@ -41,10 +41,23 @@ func main() {
 			log.Fatalf("Failed to parse JSON")
 		}
 
-		fmt.Printf("%v\n", data)
+		fmt.Printf("email: %v, password: %v\n", data.Email, data.Password)
 	})
 
 	mysql.Connect()
+	type User struct {
+		Id int
+		Name string
+		Email string
+		Password string
+	}
+	result, err := mysql.Select[User]("SELECT * FROM user;")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("%v", result)
 
 	fmt.Println("Starting server at port:", PORT)
 	log.Fatal(server.ListenAndServe())

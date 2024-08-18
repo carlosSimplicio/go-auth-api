@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"reflect"
 
 	"github.com/go-sql-driver/mysql"
 )
@@ -17,7 +18,7 @@ func Connect() {
 	config := mysql.Config{
 		User: os.Getenv("MYSQL_USER"),
 		Passwd: os.Getenv("MYSQL_PASSWORD"),
-		DBName: "mysql",
+		DBName: "auth",
 		Addr: "127.0.0.1:3306",
 		Net: "tcp",
 	}
@@ -35,16 +36,38 @@ func Connect() {
 	}
 
 	fmt.Println("Connected")
+}
 
-	data, err := db.Query("SELECT * FROM test;")
-
+func Select[T interface{}](query string, params ...any) ([]any, error) {
+	var data []any
+	rows, _ := db.Query(query, params...)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
+	defer rows.Close()
 
-	defer data.Close()
+	for rows.Next() {
+		var row T	
+		t := reflect.TypeOf(&row).Elem()
+		v := reflect.ValueOf(&row).Elem()
+		numField := t.NumField()
+		var pointers []any	
 
-	for data.Next() {
+		for i := 0; i < numField; i++ {
+			structField := v.Field(i)
+			pointers = append(pointers, structField.Addr().Interface())
+		}
+
+		if err := rows.Scan(pointers...); err != nil {
+			return nil, err
+		}
 		
+		data = append(data, row)
 	}
+
+	if err:= rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }
