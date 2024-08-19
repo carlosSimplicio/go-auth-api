@@ -108,6 +108,8 @@ func main() {
 	})
 
 	mysql.Connect()
+	defer mysql.Close()
+	
 	fmt.Println("Starting server at port:", PORT)
 	log.Fatal(server.ListenAndServe())
 }

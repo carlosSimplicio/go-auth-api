@@ -75,3 +75,7 @@ func Exec(query string, params ...any) (operationResult sql.Result, err error) {
 	result, err := pool.Exec(query, params...)
 	return result, err
 }
+
+func Close() {
+	pool.Close()
+}
