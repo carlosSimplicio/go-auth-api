@@ -51,13 +51,21 @@ func main() {
 		Email string
 		Password string
 	}
-	result, err := mysql.Select[User]("SELECT * FROM user;")
+	myUser := User{Name: "teste2", Email: "teste2@gmail.com", Password: "teste2"}
+	result, err := mysql.Insert("INSERT INTO user (name, email, password) VALUES (?, ?, ?)", &myUser.Name, &myUser.Email, &myUser.Password)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("inserted: %v", result)
+
+	users, err := mysql.Select[User]("SELECT * FROM user;")
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("%v", result)
+	fmt.Printf("%v", users)
 
 	fmt.Println("Starting server at port:", PORT)
 	log.Fatal(server.ListenAndServe())

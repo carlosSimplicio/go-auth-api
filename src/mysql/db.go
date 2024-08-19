@@ -51,11 +51,11 @@ func Select[T interface{}](query string, params ...any) ([]any, error) {
 		t := reflect.TypeOf(&row).Elem()
 		v := reflect.ValueOf(&row).Elem()
 		numField := t.NumField()
-		var pointers []any	
+		pointers := make([]any, numField)
 
 		for i := 0; i < numField; i++ {
 			structField := v.Field(i)
-			pointers = append(pointers, structField.Addr().Interface())
+			pointers[i] =  structField.Addr().Interface()
 		}
 
 		if err := rows.Scan(pointers...); err != nil {
@@ -70,4 +70,19 @@ func Select[T interface{}](query string, params ...any) ([]any, error) {
 	}
 
 	return data, nil
+}
+
+func Insert(query string, params ...any) (insertedId int64, err error) {
+	result, err := db.Exec(query, params...)
+
+	if err != nil {
+		return 0, err
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
 }
