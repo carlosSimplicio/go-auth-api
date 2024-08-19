@@ -45,28 +45,6 @@ func main() {
 	})
 
 	mysql.Connect()
-	type User struct {
-		Id int
-		Name string
-		Email string
-		Password string
-	}
-	myUser := User{Name: "teste2", Email: "teste2@gmail.com", Password: "teste2"}
-	result, err := mysql.Exec("INSERT INTO user (name, email, password) VALUES (?, ?, ?)", &myUser.Name, &myUser.Email, &myUser.Password)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("inserted: %v", result)
-
-	users, err := mysql.Select[User]("SELECT * FROM user;")
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Printf("%v", users)
-
 	fmt.Println("Starting server at port:", PORT)
 	log.Fatal(server.ListenAndServe())
 }
