@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	mysql "github.com/carlosSimplicio/go-auth-api/src/mysql"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type SignInData struct {
@@ -42,11 +43,16 @@ func main() {
 			log.Fatalf("Failed to parse JSON")
 		}
 
+		hashedPassword, err := hashPassword([]byte(data.Password))
+		if err != nil {
+			log.Fatalf("Failed to hash password")
+		}
+
 		_, err = mysql.Exec(
 			"INSERT INTO user (name, email, password) VALUES (?,?,?)",
 			&data.Name, 
 			&data.Email, 
-			&data.Password,
+			&hashedPassword,
 		)
 
 		if err != nil {
@@ -59,4 +65,9 @@ func main() {
 	mysql.Connect()
 	fmt.Println("Starting server at port:", PORT)
 	log.Fatal(server.ListenAndServe())
+}
+
+func hashPassword(password []byte) (hashedPassword []byte, err error){
+	rounds := 10
+	return bcrypt.GenerateFromPassword(password, rounds)
 }
