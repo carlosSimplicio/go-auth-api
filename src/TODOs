@@ -1,0 +1,6 @@
+TODOs
+
+Retornar um jwt após criacao de usuario/login
+Método para verificar o token jwt
+Refatorar o código em controllers/repositories, etc
+
