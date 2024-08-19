@@ -10,7 +10,7 @@ import (
 	"github.com/go-sql-driver/mysql"
 )
 
-var db *sql.DB
+var pool *sql.DB
 var err error
 
 
@@ -23,14 +23,13 @@ func Connect() {
 		Net: "tcp",
 	}
 
-	db, err = sql.Open("mysql", config.FormatDSN())
+	pool, err = sql.Open("mysql", config.FormatDSN())
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	pingErr := db.Ping()
-
+	pingErr := pool.Ping()
 	if pingErr != nil {
 		log.Fatal(pingErr)
 	}
@@ -40,7 +39,7 @@ func Connect() {
 
 func Select[T interface{}](query string, params ...any) ([]any, error) {
 	var data []any
-	rows, _ := db.Query(query, params...)
+	rows, _ := pool.Query(query, params...)
 	if err != nil {
 		return nil, err
 	}
@@ -73,6 +72,6 @@ func Select[T interface{}](query string, params ...any) ([]any, error) {
 }
 
 func Exec(query string, params ...any) (operationResult sql.Result, err error) {
-	result, err := db.Exec(query, params...)
+	result, err := pool.Exec(query, params...)
 	return result, err
 }

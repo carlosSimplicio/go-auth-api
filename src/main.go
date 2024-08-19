@@ -11,6 +11,7 @@ import (
 )
 
 type SignInData struct {
+	Name string `json:"name"`
 	Email string `json:"email"`
 	Password string `json:"password"`
 }
@@ -41,7 +42,18 @@ func main() {
 			log.Fatalf("Failed to parse JSON")
 		}
 
-		fmt.Printf("email: %v, password: %v\n", data.Email, data.Password)
+		_, err = mysql.Exec(
+			"INSERT INTO user (name, email, password) VALUES (?,?,?)",
+			&data.Name, 
+			&data.Email, 
+			&data.Password,
+		)
+
+		if err != nil {
+			log.Fatalln("Failed to insert user Id")
+		}
+
+		w.Write([]byte("User created successfully"))
 	})
 
 	mysql.Connect()
