@@ -52,7 +52,7 @@ func main() {
 		Password string
 	}
 	myUser := User{Name: "teste2", Email: "teste2@gmail.com", Password: "teste2"}
-	result, err := mysql.Insert("INSERT INTO user (name, email, password) VALUES (?, ?, ?)", &myUser.Name, &myUser.Email, &myUser.Password)
+	result, err := mysql.Exec("INSERT INTO user (name, email, password) VALUES (?, ?, ?)", &myUser.Name, &myUser.Email, &myUser.Password)
 
 	if err != nil {
 		log.Fatal(err)

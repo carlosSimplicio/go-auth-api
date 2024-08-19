@@ -72,17 +72,7 @@ func Select[T interface{}](query string, params ...any) ([]any, error) {
 	return data, nil
 }
 
-func Insert(query string, params ...any) (insertedId int64, err error) {
+func Exec(query string, params ...any) (operationResult sql.Result, err error) {
 	result, err := db.Exec(query, params...)
-
-	if err != nil {
-		return 0, err
-	}
-
-	id, err := result.LastInsertId()
-	if err != nil {
-		return 0, err
-	}
-
-	return id, nil
+	return result, err
 }
