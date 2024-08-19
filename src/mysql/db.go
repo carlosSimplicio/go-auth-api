@@ -37,8 +37,8 @@ func Connect() {
 	fmt.Println("Connected")
 }
 
-func Select[T interface{}](query string, params ...any) ([]any, error) {
-	var data []any
+func Select[T interface{}](query string, params ...any) ([]T, error) {
+	var data []T
 	rows, _ := pool.Query(query, params...)
 	if err != nil {
 		return nil, err
