@@ -18,24 +18,6 @@ func (c *AuthenticationControllerType) SetupRoutes(handler *http.ServeMux) {
 	}
 }
 
-type SignUpData struct {
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
-type LoginData struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
-type User struct {
-	Id       int
-	Name     string
-	Email    string
-	Password string
-}
-
 func handleSignUp(w http.ResponseWriter, r *http.Request) {
 	var err error
 	var body []byte

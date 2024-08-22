@@ -3,13 +3,23 @@ package services
 import (
 	"fmt"
 
-	"github.com/carlosSimplicio/go-auth-api/src/controllers"
 	userRepository "github.com/carlosSimplicio/go-auth-api/src/repositories/user"
 	"github.com/carlosSimplicio/go-auth-api/src/utils"
 )
 
+type SignUpData struct {
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type LoginData struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 func SignUp(body []byte) error {
-	signUpData := &controllers.SignUpData{}
+	signUpData := &SignUpData{}
 	err := utils.ParseJson(body, signUpData)
 
 	if err != nil {
@@ -22,7 +32,7 @@ func SignUp(body []byte) error {
 		return fmt.Errorf("Error hashing password: [%w]", err)
 	}
 
-	user := controllers.User{
+	user := userRepository.User{
 		Name:     signUpData.Name,
 		Email:    signUpData.Email,
 		Password: string(hashedPassword),
@@ -38,7 +48,7 @@ func SignUp(body []byte) error {
 }
 
 func Login(body []byte) (string, error) {
-	loginData := &controllers.LoginData{}
+	loginData := &LoginData{}
 	err := utils.ParseJson(body, loginData)
 
 	if err != nil {

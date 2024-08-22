@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	ctrler "github.com/carlosSimplicio/go-auth-api/src/controllers"
-	"github.com/carlosSimplicio/go-auth-api/src/mysql"
+	"github.com/carlosSimplicio/go-auth-api/src/infra/mysql"
 )
 
 type Controller interface {

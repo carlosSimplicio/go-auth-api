@@ -4,11 +4,17 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/carlosSimplicio/go-auth-api/src/controllers"
 	"github.com/carlosSimplicio/go-auth-api/src/infra/mysql"
 )
 
-func CreateUser(user *controllers.User) (int, error) {
+type User struct {
+	Id       int
+	Name     string
+	Email    string
+	Password string
+}
+
+func CreateUser(user *User) (int, error) {
 	query := "INSERT INTO user (name, email, password) VALUES (?,?,?);"
 	params := []any{user.Name, user.Email, user.Password}
 
@@ -27,9 +33,9 @@ func CreateUser(user *controllers.User) (int, error) {
 	return int(userId), nil
 }
 
-func GetUserById(id int) (*controllers.User, error) {
+func GetUserById(id int) (*User, error) {
 	query := "SELECT Id, Name, Email, Password FROM user WHERE id = ?;"
-	result, err := mysql.Select[controllers.User](query, id)
+	result, err := mysql.Select[User](query, id)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to fetch User: [%w]", err)
@@ -44,9 +50,9 @@ func GetUserById(id int) (*controllers.User, error) {
 	return &user, nil
 }
 
-func GetUserByEmail(email string) (*controllers.User, error) {
+func GetUserByEmail(email string) (*User, error) {
 	query := "SELECT Id, Name, Email, Password FROM user WHERE email = ?;"
-	result, err := mysql.Select[controllers.User](query, email)
+	result, err := mysql.Select[User](query, email)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to fetch User: [%w]", err)
