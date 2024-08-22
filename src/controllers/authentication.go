@@ -5,14 +5,14 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/carlosSimplicio/go-auth-api/src/services"
+	"github.com/carlosSimplicio/go-auth-api/src/services/authentication"
 )
 
-type AuthenticationControllerType struct {
+type ControllerType struct {
 	routeTable map[string]func(http.ResponseWriter, *http.Request)
 }
 
-func (c *AuthenticationControllerType) SetupRoutes(handler *http.ServeMux) {
+func (c *ControllerType) SetupRoutes(handler *http.ServeMux) {
 	for route, routeHandler := range c.routeTable {
 		handler.HandleFunc(route, routeHandler)
 	}
@@ -25,12 +25,14 @@ func handleSignUp(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
 		return
 	}
 
-	err = services.SignUp(body)
+	err = authentication.SignUp(body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
 		return
 	}
 
@@ -46,17 +48,18 @@ func handleLogin(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln("Failed to read body")
 	}
 
-	token, err := services.Login(body)
+	token, err := authentication.Login(body)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
 		return
 	}
 
 	w.Write([]byte(token))
 }
 
-var AuthenticationController = &AuthenticationControllerType{
+var AuthenticationController = &ControllerType{
 	map[string]func(http.ResponseWriter, *http.Request){
 		"POST /login":  handleLogin,
 		"POST /signup": handleSignUp,

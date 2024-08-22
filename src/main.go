@@ -7,13 +7,10 @@ import (
 
 	ctrler "github.com/carlosSimplicio/go-auth-api/src/controllers"
 	"github.com/carlosSimplicio/go-auth-api/src/infra/mysql"
+	interfaces "github.com/carlosSimplicio/go-auth-api/src/registry"
 )
 
-type Controller interface {
-	SetupRoutes(handler *http.ServeMux)
-}
-
-var controllers = []Controller{ctrler.AuthenticationController}
+var controllers = []interfaces.Controller{ctrler.AuthenticationController}
 
 func main() {
 	PORT := 8080

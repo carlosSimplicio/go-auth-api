@@ -14,6 +14,8 @@ type User struct {
 	Password string
 }
 
+var ErrUserNotFound = errors.New("user not found")
+
 func CreateUser(user *User) (int, error) {
 	query := "INSERT INTO user (name, email, password) VALUES (?,?,?);"
 	params := []any{user.Name, user.Email, user.Password}
@@ -21,13 +23,13 @@ func CreateUser(user *User) (int, error) {
 	result, err := mysql.Exec(query, params...)
 
 	if err != nil {
-		return 0, fmt.Errorf("Failed to insert user: [%w]", err)
+		return 0, fmt.Errorf("failed to insert user: [%w]", err)
 	}
 
 	userId, err := result.LastInsertId()
 
 	if err != nil {
-		return 0, fmt.Errorf("Failed to get inserted user ID: [%w]", err)
+		return 0, fmt.Errorf("failed to get inserted user ID: [%w]", err)
 	}
 
 	return int(userId), nil
@@ -38,11 +40,11 @@ func GetUserById(id int) (*User, error) {
 	result, err := mysql.Select[User](query, id)
 
 	if err != nil {
-		return nil, fmt.Errorf("Failed to fetch User: [%w]", err)
+		return nil, fmt.Errorf("failed to fetch User: [%w]", err)
 	}
 
 	if len(result) == 0 {
-		return nil, errors.New("User not found")
+		return nil, ErrUserNotFound
 	}
 
 	user := result[0]
@@ -55,11 +57,11 @@ func GetUserByEmail(email string) (*User, error) {
 	result, err := mysql.Select[User](query, email)
 
 	if err != nil {
-		return nil, fmt.Errorf("Failed to fetch User: [%w]", err)
+		return nil, fmt.Errorf("failed to fetch User: [%w]", err)
 	}
 
 	if len(result) == 0 {
-		return nil, errors.New("User not found")
+		return nil, ErrUserNotFound
 	}
 
 	user := result[0]
