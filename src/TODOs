@@ -3,5 +3,6 @@ TODOs
 Retornar um jwt após criacao de usuario/login - DONE
 Método para verificar o token jwt - DONE
 Refatorar o código em controllers/repositories, etc- Done
-Parar com o logFatal em caso de ERRO e retornar código 500
+Parar com o logFatal em caso de ERRO e retornar código 500 - DONE
+Melhorar códigos de erro
 
