@@ -6,4 +6,5 @@ Refatorar o código em controllers/repositories, etc- Done
 Parar com o logFatal em caso de ERRO e retornar código 500 - DONE
 Melhorar códigos de erro
 Adicionar testes unitários
+Melhorar criacao e validacao do jwt
 
