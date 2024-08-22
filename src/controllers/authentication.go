@@ -8,11 +8,11 @@ import (
 	"github.com/carlosSimplicio/go-auth-api/src/services/authentication"
 )
 
-type ControllerType struct {
+type controller struct {
 	routeTable map[string]func(http.ResponseWriter, *http.Request)
 }
 
-func (c *ControllerType) SetupRoutes(handler *http.ServeMux) {
+func (c *controller) SetupRoutes(handler *http.ServeMux) {
 	for route, routeHandler := range c.routeTable {
 		handler.HandleFunc(route, routeHandler)
 	}
@@ -59,7 +59,7 @@ func handleLogin(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(token))
 }
 
-var AuthenticationController = &ControllerType{
+var AuthenticationController = &controller{
 	map[string]func(http.ResponseWriter, *http.Request){
 		"POST /login":  handleLogin,
 		"POST /signup": handleSignUp,
