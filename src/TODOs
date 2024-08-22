@@ -5,4 +5,5 @@ Método para verificar o token jwt - DONE
 Refatorar o código em controllers/repositories, etc- Done
 Parar com o logFatal em caso de ERRO e retornar código 500 - DONE
 Melhorar códigos de erro
+Adicionar testes unitários
 
