@@ -7,4 +7,8 @@ Parar com o logFatal em caso de ERRO e retornar código 500 - DONE
 Melhorar códigos de erro
 Adicionar testes unitários
 Melhorar criacao e validacao do jwt
+Refresh tokens
+Divisao por aplicacoes/tenants
+Fluxo de autorizacao.
+Deploy básico
 
