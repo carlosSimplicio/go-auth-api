@@ -16,7 +16,7 @@ func main() {
 	PORT := 8080
 	handler := http.NewServeMux()
 	server := &http.Server{
-		Addr:    fmt.Sprintf("localhost:%v", PORT),
+		Addr:    fmt.Sprintf("0.0.0.0:%v", PORT),
 		Handler: handler,
 	}
 

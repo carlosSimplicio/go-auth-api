@@ -18,7 +18,7 @@ func Connect() {
 		User:   os.Getenv("MYSQL_USER"),
 		Passwd: os.Getenv("MYSQL_PASSWORD"),
 		DBName: "auth",
-		Addr:   "127.0.0.1:3306",
+		Addr:   os.Getenv("MYSQL_ADDRESS"),
 		Net:    "tcp",
 	}
 
