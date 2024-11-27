@@ -12,3 +12,6 @@ Divisao por aplicacoes/tenants
 Fluxo de autorizacao.
 Deploy básico
 
+
+FAZENDO AGORA: ESTOU TRANSFORMANDO TUDO EM INJECAO DE DEPENDENCIA PARA FACILITAR O MOCK DOS TESTES UNITARIOS
+

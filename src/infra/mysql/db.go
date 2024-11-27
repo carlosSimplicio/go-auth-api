@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"reflect"
 
 	"github.com/go-sql-driver/mysql"
 )
@@ -13,7 +12,9 @@ import (
 var pool *sql.DB
 var err error
 
-func Connect() {
+type MySqlClient struct{}
+
+func (c *MySqlClient) Connect() {
 	config := mysql.Config{
 		User:   os.Getenv("MYSQL_USER"),
 		Passwd: os.Getenv("MYSQL_PASSWORD"),
@@ -36,41 +37,21 @@ func Connect() {
 	fmt.Println("Connected")
 }
 
-func Select[T interface{}](query string, params ...any) ([]T, error) {
-	var data []T
-	rows, _ := pool.Query(query, params...)
+func (c *MySqlClient) Select(query string, params ...any) (*sql.Rows, error) {
+	rows, err := pool.Query(query, params...)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	for rows.Next() {
-		var row T
-		t := reflect.TypeOf(&row).Elem()
-		v := reflect.ValueOf(&row).Elem()
-		numField := t.NumField()
-		pointers := make([]any, numField)
-
-		for i := 0; i < numField; i++ {
-			structField := v.Field(i)
-			pointers[i] = structField.Addr().Interface()
-		}
-
-		if err := rows.Scan(pointers...); err != nil {
-			return nil, err
-		}
-
-		data = append(data, row)
-	}
-
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
 
-	return data, nil
+	return rows, nil
 }
 
-func Exec(query string, params ...any) (operationResult sql.Result, err error) {
+func (c *MySqlClient) Exec(query string, params ...any) (operationResult sql.Result, err error) {
 	result, err := pool.Exec(query, params...)
 	return result, err
 }

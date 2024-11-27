@@ -5,11 +5,11 @@ import (
 	"log"
 	"time"
 
-	userRepository "github.com/carlosSimplicio/go-auth-api/src/repositories/user"
+	interfaces "github.com/carlosSimplicio/go-auth-api/src/registry"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func CreateJwt(user *userRepository.User) (string, error) {
+func CreateJwt(user *interfaces.User) (string, error) {
 	type Claims struct {
 		userId    int
 		userName  string

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 
+	interfaces "github.com/carlosSimplicio/go-auth-api/src/registry"
 	userRepository "github.com/carlosSimplicio/go-auth-api/src/repositories/user"
 	"github.com/carlosSimplicio/go-auth-api/src/utils"
 )
@@ -14,7 +15,11 @@ type SignUpData struct {
 	Password string `json:"password"`
 }
 
-func SignUp(body []byte) error {
+type SignUpService struct {
+	UserRepository interfaces.UserRepository
+}
+
+func (s *SignUpService) SignUp(body []byte) error {
 	signUpData := &SignUpData{}
 	err := utils.ParseJson(body, signUpData)
 
@@ -26,7 +31,7 @@ func SignUp(body []byte) error {
 		return errors.New("invalid missing required params: email, name or password")
 	}
 
-	user, err := userRepository.GetUserByEmail(signUpData.Email)
+	user, err := s.UserRepository.GetUserByEmail(signUpData.Email)
 
 	if err != nil && !errors.Is(userRepository.ErrUserNotFound, err) {
 		return err
@@ -42,13 +47,13 @@ func SignUp(body []byte) error {
 		return fmt.Errorf("error hashing password: [%w]", err)
 	}
 
-	user = &userRepository.User{
+	user = &interfaces.User{
 		Name:     signUpData.Name,
 		Email:    signUpData.Email,
 		Password: string(hashedPassword),
 	}
 
-	_, err = userRepository.CreateUser(user)
+	_, err = s.UserRepository.CreateUser(user)
 
 	if err != nil {
 		return fmt.Errorf("failed to create user: [%w]", err)

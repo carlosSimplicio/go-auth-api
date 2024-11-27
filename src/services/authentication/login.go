@@ -3,7 +3,7 @@ package authentication
 import (
 	"fmt"
 
-	userRepository "github.com/carlosSimplicio/go-auth-api/src/repositories/user"
+	interfaces "github.com/carlosSimplicio/go-auth-api/src/registry"
 	"github.com/carlosSimplicio/go-auth-api/src/utils"
 )
 
@@ -12,7 +12,11 @@ type LoginData struct {
 	Password string `json:"password"`
 }
 
-func Login(body []byte) (string, error) {
+type LoginService struct {
+	UserRepository interfaces.UserRepository
+}
+
+func (l *LoginService) Login(body []byte) (string, error) {
 	loginData := &LoginData{}
 	err := utils.ParseJson(body, loginData)
 
@@ -20,7 +24,7 @@ func Login(body []byte) (string, error) {
 		return "", fmt.Errorf("failed to parse body: [%w]", err)
 	}
 
-	user, err := userRepository.GetUserByEmail(loginData.Email)
+	user, err := l.UserRepository.GetUserByEmail(loginData.Email)
 
 	if err != nil {
 		return "", fmt.Errorf("user not found: [%w]", err)
