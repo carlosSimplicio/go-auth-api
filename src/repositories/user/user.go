@@ -40,6 +40,7 @@ func (u *UserRepository) GetUserById(id int) (*interfaces.User, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch User: [%w]", err)
 	}
+	defer rows.Close()
 
 	result, err := utils.GetRowsValues[interfaces.User](rows)
 
@@ -63,6 +64,7 @@ func (u *UserRepository) GetUserByEmail(email string) (*interfaces.User, error) 
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch User: [%w]", err)
 	}
+	defer rows.Close()
 
 	result, err := utils.GetRowsValues[interfaces.User](rows)
 

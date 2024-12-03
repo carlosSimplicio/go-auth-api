@@ -20,8 +20,10 @@ func main() {
 		Handler: handler,
 	}
 
-	mysql.Connect()
-	defer mysql.Close()
+	client := mysql.MySqlClient{}
+
+	client.Connect()
+	defer client.Close()
 
 	for _, controller := range controllers {
 		controller.SetupRoutes(handler)

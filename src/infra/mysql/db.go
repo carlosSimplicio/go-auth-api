@@ -42,7 +42,6 @@ func (c *MySqlClient) Select(query string, params ...any) (*sql.Rows, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
 
 	if err := rows.Err(); err != nil {
 		return nil, err
@@ -56,6 +55,6 @@ func (c *MySqlClient) Exec(query string, params ...any) (operationResult sql.Res
 	return result, err
 }
 
-func Close() {
+func (c *MySqlClient) Close() {
 	pool.Close()
 }
