@@ -16,7 +16,7 @@ type SignUpData struct {
 }
 
 type SignUpService struct {
-	UserRepository interfaces.UserRepository
+	UserRepository interfaces.IUserRepository
 }
 
 func (s *SignUpService) SignUp(body []byte) error {

@@ -11,7 +11,7 @@ import (
 var ErrUserNotFound = errors.New("user not found")
 
 type UserRepository struct {
-	Client interfaces.DbClient
+	Client interfaces.IDbClient
 }
 
 func (u *UserRepository) CreateUser(user *interfaces.User) (int, error) {

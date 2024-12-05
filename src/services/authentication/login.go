@@ -13,7 +13,7 @@ type LoginData struct {
 }
 
 type LoginService struct {
-	UserRepository interfaces.UserRepository
+	UserRepository interfaces.IUserRepository
 }
 
 func (l *LoginService) Login(body []byte) (string, error) {
