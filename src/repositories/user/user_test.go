@@ -1,7 +1,7 @@
 package userRepository
 
 import (
-	"fmt"
+	"database/sql"
 	"testing"
 
 	interfaces "github.com/carlosSimplicio/go-auth-api/src/registry"
@@ -9,12 +9,18 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-type mockExecReturn struct {
-	returnId int64
+type mockExecReturn struct{}
+
+var execLastInsertId int64
+var execRowsAffected int64
+var execError error
+
+func (mockExecReturn) LastInsertId() (int64, error) {
+	return execLastInsertId, execError
 }
 
-func (m *mockExecReturn) LastInsertId() (int64, error) {
-	return m.returnId, nil
+func (mockExecReturn) RowsAffected() (int64, error) {
+	return execRowsAffected, execError
 }
 
 func TestCreateUserSuccess(t *testing.T) {
@@ -25,19 +31,24 @@ func TestCreateUserSuccess(t *testing.T) {
 		Email:    "mock@mock.com",
 		Password: "mockingIsFun",
 	}
-	mockReturnId := int64(25)
+	execLastInsertId = 25
 
 	mockClient.EXPECT().Exec(
-		gomock.Eq("INSERT INTO user (name, email, password) VALUES (?, ?, ?);"),
+		gomock.Eq("INSERT INTO user (name, email, password) VALUES (?,?,?);"),
 		gomock.Eq([]any{testUser.Name, testUser.Email, testUser.Password}),
-	).Times(1).Return(mockExecReturn{returnId: mockReturnId}, nil)
+	).Times(1).Return(sql.Result(mockExecReturn{}), nil)
 
 	repository := &UserRepository{
 		Client: mockClient,
 	}
 
 	insertedId, err := repository.CreateUser(testUser)
+	if err != nil {
+		t.Fatalf("Error creating user: %s\n", err)
+	}
 
-	fmt.Sprintf("%d, %s", insertedId, err)
+	if insertedId != int(execLastInsertId) {
+		t.Fatalf("Exepected insertedId: %d, Got: %d!\n", execLastInsertId, insertedId)
+	}
 
 }
